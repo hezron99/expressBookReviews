@@ -27,12 +27,11 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
  public_users.get('/', async (req, res) =>{
   try {
-    const response = await axios.get(bookApiUrl);
-    const books = response.data;
-    console.log(books);
-    res.status(200).json({ books });
+    const response = await new Promise((resolve,reject)=>{
+      resolve(books);
+    });
+    res.send(JSON.stringify({response},null,4));
   } catch (error) {
-    console.error('Error fetching book data:', error.message);
     res.status(500).json({ error: 'Failed to fetch book data' });
   }
  });
@@ -40,6 +39,7 @@ public_users.post("/register", (req,res) => {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
+  const isbn = req.params.isbn;
   function searchBookByISBN(isbn) {
     return new Promise((resolve, reject) => {
       const book = books[isbn];
@@ -52,7 +52,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
   }
   
   const methCall = new Promise((resolve, reject) => {
-    const isbn = req.params.isbn;
+    
   
     searchBookByISBN(isbn)
       .then((book) => {
@@ -70,10 +70,6 @@ public_users.get('/isbn/:isbn',function (req, res) {
     .catch((err) => {
       res.send('Error:', err.message);
     });
-  
-  
-  
-  
  });
   
 // Get book details based on author
